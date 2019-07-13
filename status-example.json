@@ -1,0 +1,19 @@
+[
+    {
+        "status_text": "Working from home",
+        "status_emoji": ":house_with_garden:",
+        "wifi_names": [
+            "home"
+        ]
+    },
+    {
+        "status_text": "",
+        "status_emoji": "",
+        "wifi_names": [
+            "work"
+        ],
+        "public_ips": [
+            "100.100.100.100"
+        ]
+    }
+]
