@@ -15,6 +15,5 @@ steps:
 services:
   - name: buildah
     image: jeffreyvdb/buildah
-    privileged: true
     environment:
       STORAGE_DRIVER: vfs
