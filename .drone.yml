@@ -13,7 +13,7 @@ steps:
       - ./build_container.sh
 
 services:
-  buildah:
+  - name: buildah
     image: jeffreyvdb/buildah
     privileged: true
     environment:
