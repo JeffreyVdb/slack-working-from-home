@@ -1,5 +1,7 @@
 # Slack wifi changer
 
+[![Build Status](https://cloud.drone.io/api/badges/JeffreyVdb/slack-working-from-home/status.svg)](https://cloud.drone.io/JeffreyVdb/slack-working-from-home)
+
 ## Getting started
 
 1. Get a slack legacy token
