@@ -1,6 +1,6 @@
 # Slack wifi changer
 
-[![Build Status](https://cloud.drone.io/api/badges/JeffreyVdb/slack-working-from-home/status.svg)](https://cloud.drone.io/JeffreyVdb/slack-working-from-home)
+[![Build Status](https://dev.azure.com/jeffrey0760/slack-wifi/_apis/build/status/JeffreyVdb.slack-working-from-home?branchName=master)](https://dev.azure.com/jeffrey0760/slack-wifi/_build/latest?definitionId=1&branchName=master)
 
 ## Getting started
 
@@ -14,6 +14,7 @@
 3. Create status file like `status-example.json`
 4. Run container with `SLACK_TOKEN` environment variable and configuration file
 
-```bash
+````bash
 podman run --rm --net=host -it -v $HOME/slack-status.json:/slack.json:Z \
     -e SLACK_STATUS_FILE=/slack.json -e SLACK_TOKEN=your-slack-token localhost/slack-wifi-changer ```
+````
