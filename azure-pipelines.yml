@@ -20,6 +20,11 @@ jobs:
           GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-linux-amd64 .
         displayName: "Build Linux go binary"
 
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: $(System.DefaultWorkingDirectory)/bin-linux-amd64
+          artifact: slack-wifi-linux-amd64
+
   - job: build_macos_amd64
     pool:
       vmImage: "ubuntu-16.04"
@@ -28,18 +33,6 @@ jobs:
       - script: |
           GOOS=darwin GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-macos-amd64 .
         displayName: "Build MacOS go binary"
-
-  - job: publish_artifacts
-    pool:
-      vmImage: "ubuntu-16.04"
-    dependsOn:
-      - build_linux_amd64
-      - build_macos_amd64
-    steps:
-      - task: PublishPipelineArtifact@1
-        inputs:
-          path: $(System.DefaultWorkingDirectory)/bin-linux-amd64
-          artifact: slack-wifi-linux-amd64
 
       - task: PublishPipelineArtifact@1
         inputs:
