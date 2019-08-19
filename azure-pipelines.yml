@@ -17,5 +17,8 @@ steps:
     displayName: "Run tests"
 
   - script: |
-      GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o app .
+      GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o /tmp/linux-amd64 .
     displayName: "Build go binary"
+
+  - publish: /tmp/linux-amd64
+    artifact: slack-wifi-linux-amd64
