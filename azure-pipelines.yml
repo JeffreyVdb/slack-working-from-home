@@ -9,16 +9,16 @@ trigger:
 pool:
   vmImage: "ubuntu-16.04"
 
-container: library/golang:1.12.9
-
 steps:
   - script: |
       go test ./...
     displayName: "Run tests"
 
   - script: |
-      GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o /tmp/linux-amd64 .
+      GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-linux-amd64 .
     displayName: "Build go binary"
 
-  - publish: /tmp/linux-amd64
-    artifact: slack-wifi-linux-amd64
+  - task: PublishPipelineArtifact@1
+    inputs:
+      path: $(System.DefaultWorkingDirectory)/bin-linux-amd64
+      artifact: slack-wifi-linux-amd64
