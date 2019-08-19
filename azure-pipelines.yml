@@ -1,24 +1,47 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+---
 trigger:
   - master
 
-pool:
-  vmImage: "ubuntu-16.04"
+jobs:
+  - job: run_unit_tests
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: |
+          go test ./...
+        displayName: "Run tests"
 
-steps:
-  - script: |
-      go test ./...
-    displayName: "Run tests"
+  - job: build_linux_amd64
+    pool:
+      vmImage: "ubuntu-16.04"
+    dependsOn: run_unit_tests
+    steps:
+      - script: |
+          GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-linux-amd64 .
+        displayName: "Build Linux go binary"
 
-  - script: |
-      GOOS=linux GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-linux-amd64 .
-    displayName: "Build go binary"
+  - job: build_macos_amd64
+    pool:
+      vmImage: "ubuntu-16.04"
+    dependsOn: run_unit_tests
+    steps:
+      - script: |
+          GOOS=darwin GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-macos-amd64 .
+        displayName: "Build MacOS go binary"
 
-  - task: PublishPipelineArtifact@1
-    inputs:
-      path: $(System.DefaultWorkingDirectory)/bin-linux-amd64
-      artifact: slack-wifi-linux-amd64
+  - job: publish_artifacts
+    pool:
+      vmImage: "ubuntu-16.04"
+    dependsOn:
+      - build_linux_amd64
+      - build_macos_amd64
+    steps:
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: $(System.DefaultWorkingDirectory)/bin-linux-amd64
+          artifact: slack-wifi-linux-amd64
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: $(System.DefaultWorkingDirectory)/bin-macos-amd64
+          artifact: slack-wifi-macos-amd64
