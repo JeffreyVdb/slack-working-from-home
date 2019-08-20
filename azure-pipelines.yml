@@ -1,4 +1,7 @@
 ---
+# TODO: Use build artificats instead of pipeline artifacts
+# TODO: Use matrix for building
+# TODO: Use built binary for testing or download newest go version on macos, linux, windows
 trigger:
   - master
 
@@ -12,9 +15,9 @@ jobs:
         linux:
           imageName: "ubuntu-16.04"
         mac:
-          imageName: "macos-10.13"
+          imageName: "macos-10.14"
         windows:
-          imageName: "vs2017-win2016"
+          imageName: "windows-2019"
 
     pool:
       vmImage: $(imageName)
