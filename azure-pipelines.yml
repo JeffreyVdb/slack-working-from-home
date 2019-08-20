@@ -4,16 +4,28 @@ trigger:
 
 jobs:
   - job: run_unit_tests
+    strategy:
+      matrix:
+        linux:
+          imageName: "ubuntu-16.04"
+        mac:
+          imageName: "macos-10.13"
+        windows:
+          imageName: "vs2017-win2016"
+
     pool:
-      vmImage: "ubuntu-16.04"
+      vmImage: $(imageName)
+
     steps:
       - script: |
           go test ./...
         displayName: "Run tests"
 
   - job: build_linux_amd64
+
     pool:
       vmImage: "ubuntu-16.04"
+
     dependsOn: run_unit_tests
     steps:
       - script: |
@@ -25,9 +37,27 @@ jobs:
           path: $(System.DefaultWorkingDirectory)/bin-linux-amd64
           artifact: slack-wifi-linux-amd64
 
+  - job: build_windows_amd64
+
+    pool:
+      vmImage: "vs2017-win2016"
+
+    dependsOn: run_unit_tests
+    steps:
+      - script: |
+          GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-windows-amd64 .
+        displayName: "Build Windows go binary"
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: $(System.DefaultWorkingDirectory)/bin-windows-amd64
+          artifact: slack-wifi-windows-amd64
+
   - job: build_macos_amd64
+
     pool:
       vmImage: "ubuntu-16.04"
+
     dependsOn: run_unit_tests
     steps:
       - script: |
