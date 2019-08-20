@@ -2,6 +2,9 @@
 trigger:
   - master
 
+variables:
+  go_version: 1.12.9
+
 jobs:
   - job: run_unit_tests
     strategy:
@@ -26,6 +29,8 @@ jobs:
     pool:
       vmImage: "ubuntu-16.04"
 
+    container: library/golang:$(go_version)
+
     dependsOn: run_unit_tests
     steps:
       - script: |
@@ -40,12 +45,14 @@ jobs:
   - job: build_windows_amd64
 
     pool:
-      vmImage: "vs2017-win2016"
+      vmImage: "ubuntu-16.04"
+
+    container: library/golang:$(go_version)
 
     dependsOn: run_unit_tests
     steps:
       - script: |
-          GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-windows-amd64 .
+          GOOS=windows GOARCH=amd64 go build -tags netgo -ldflags '-w -extldflags "-static"' -o bin-windows-amd64 .
         displayName: "Build Windows go binary"
 
       - task: PublishPipelineArtifact@1
@@ -57,6 +64,8 @@ jobs:
 
     pool:
       vmImage: "ubuntu-16.04"
+
+    container: library/golang:$(go_version)
 
     dependsOn: run_unit_tests
     steps:

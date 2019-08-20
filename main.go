@@ -34,6 +34,7 @@ type statusEntry struct {
 }
 
 var programConfig = new(configuration)
+var outputVersion bool
 
 var publicIPServices = []string{
 	"https://api.ipify.org/?format=json",
@@ -143,10 +144,17 @@ func init() {
 	rand.Seed(time.Now().Unix())
 
 	flag.StringVar(&programConfig.slackStatusFilePath, "status-file", "/etc/slack-status.json", "Slack status file path")
+	flag.BoolVar(&outputVersion, "version", false, "Get version of this program")
 }
 
 func main() {
 	flag.Parse()
+	if outputVersion {
+		fmt.Println("Version 1.0")
+		fmt.Printf("Go version: %s\n", runtime.Version())
+		os.Exit(0)
+	}
+
 	err := readEnvironment(programConfig)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "There was an error while reading configuration: %v\n", err)
