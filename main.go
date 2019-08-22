@@ -157,24 +157,23 @@ func main() {
 
 	err := readEnvironment(programConfig)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "There was an error while reading configuration: %v\n", err)
-		os.Exit(1)
 	}
 
 	ssid, err := getWifiSSID()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error while trying to get SSID: %v\n", err)
+		util.PrintError(os.Stderr, "Error while trying to get SSID: %v\n", err)
 		os.Exit(1)
 	}
 
 	publicIP, err := getPublicIPAddress(publicIPServices)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error while trying to get public IP: %v\n", err)
+		util.PrintError(os.Stderr, "Error while trying to get public IP: %v\n", err)
+		os.Exit(1)
 	}
 
 	status, err := getSlackStatusFromFile(programConfig.slackStatusFilePath, ssid, publicIP)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error while trying to get status: %v\n", err)
+		util.PrintError(os.Stderr, "Error while trying to get status: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -185,14 +184,14 @@ func main() {
 
 	slackClient, err := slack.NewClient(programConfig.slackAPIToken, slack.Timeout(10))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error while trying to create slack client: %v\n", err)
+		util.PrintError(os.Stderr, "Error while trying to create slack client: %v\n", err)
 		os.Exit(1)
 	}
 
 	fmt.Println("Setting status...")
 	err = slackClient.SetProfileStatus(status)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error setting slack status: %v\n", err)
+		util.PrintError(os.Stderr, "Error setting slack status: %v\n", err)
 		os.Exit(1)
 	}
 }
