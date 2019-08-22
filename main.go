@@ -45,11 +45,11 @@ func getSlackStatusFromFile(filename, ssid, publicIP string) (*slack.SlackStatus
 	if err != nil {
 		return nil, err
 	}
-	defer fileHandle.Close()
 
-	config := []statusEntry{}
+	config := make([]statusEntry, 0)
 	err = json.NewDecoder(fileHandle).Decode(&config)
 	if err != nil {
+		_ = fileHandle.Close()
 		return nil, err
 	}
 
@@ -58,12 +58,16 @@ func getSlackStatusFromFile(filename, ssid, publicIP string) (*slack.SlackStatus
 
 		if util.ContainsString(entry.WifiNames, ssid) {
 			if !hasIPConstraint || util.ContainsString(entry.PublicIPs, publicIP) {
-				return &slack.SlackStatus{StatusText: entry.StatusText, StatusEmoji: entry.StatusEmoji}, nil
+
+				return &slack.SlackStatus{
+					StatusText:  entry.StatusText,
+					StatusEmoji: entry.StatusEmoji,
+				}, fileHandle.Close()
 			}
 		}
 	}
 
-	return nil, nil
+	return nil, fileHandle.Close()
 }
 
 func getPublicIPAddress(ipServices []string) (string, error) {
@@ -72,15 +76,15 @@ func getPublicIPAddress(ipServices []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
 
 	response := &publicIPResponse{}
 	err = json.NewDecoder(resp.Body).Decode(response)
 	if err != nil {
+		_ = resp.Body.Close()
 		return "", err
 	}
 
-	return response.IP, nil
+	return response.IP, resp.Body.Close()
 }
 
 const linuxCmd = "iwgetid"
