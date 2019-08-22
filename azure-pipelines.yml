@@ -6,7 +6,7 @@ trigger:
   - master
 
 variables:
-  go_version: 1.12.9
+  GO_VERSION: 1.12.9
 
 jobs:
   - job: run_unit_tests
@@ -25,7 +25,7 @@ jobs:
     steps:
       - script: |
           go version
-          go test ./...
+          go test -v -cover ./...
         displayName: "Run tests"
 
   - job: build_linux_amd64
@@ -33,7 +33,7 @@ jobs:
     pool:
       vmImage: "ubuntu-16.04"
 
-    container: library/golang:$(go_version)
+    container: library/golang:$(GO_VERSION)
 
     dependsOn: run_unit_tests
     steps:
@@ -51,7 +51,7 @@ jobs:
     pool:
       vmImage: "ubuntu-16.04"
 
-    container: library/golang:$(go_version)
+    container: library/golang:$(GO_VERSION)
 
     dependsOn: run_unit_tests
     steps:
@@ -69,7 +69,7 @@ jobs:
     pool:
       vmImage: "ubuntu-16.04"
 
-    container: library/golang:$(go_version)
+    container: library/golang:$(GO_VERSION)
 
     dependsOn: run_unit_tests
     steps:
