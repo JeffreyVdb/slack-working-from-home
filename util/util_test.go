@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"testing"
 )
@@ -44,4 +45,19 @@ func TestPrintErrorPanic(t *testing.T) {
 
 	writer := &ErrorProneNullWriter{}
 	PrintError(writer, "narwhals are not awesome")
+}
+
+func TestIsEnvDefined(t *testing.T) {
+	err := os.Setenv("REALLY_SET", "1")
+	if err != nil {
+		t.Errorf("Unable to set environment variable for test")
+	}
+
+	if !IsEnvDefined("REALLY_SET") {
+		t.Errorf("Environment variable REALLY_SET should be false")
+	}
+
+	if IsEnvDefined("__REALLY_NOT_SET") {
+		t.Errorf("Environment variable __REALLY_NOT_SET should not be set")
+	}
 }

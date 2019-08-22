@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"github.com/JeffreyVdb/slack-working-from-home/util"
 	"io"
 	"net/http"
 	"net/url"
@@ -63,7 +64,7 @@ func NewClient(token string, options ...ClientOption) (*Client, error) {
 
 	if client.httpClient == nil {
 		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: util.IsEnvDefined("http_proxy") || util.IsEnvDefined("https_proxy")},
 			Proxy:           http.ProxyFromEnvironment,
 		}
 		client.httpClient = &http.Client{Timeout: client.timeout, Transport: tr}
