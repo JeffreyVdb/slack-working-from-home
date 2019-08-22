@@ -1,6 +1,6 @@
 # Slack wifi changer
 
-[![Build Status](https://dev.azure.com/jeffrey0760/slack-wifi/_apis/build/status/JeffreyVdb.slack-working-from-home?branchName=master)](https://dev.azure.com/jeffrey0760/slack-wifi/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/DeferFuncClose/slack-wifi/_apis/build/status/JeffreyVdb.slack-working-from-home?branchName=master)](https://dev.azure.com/DeferFuncClose/slack-wifi/_build/latest?definitionId=1&branchName=master)
 
 ## Getting started
 
